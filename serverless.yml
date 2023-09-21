@@ -1,0 +1,107 @@
+service: DOCUMENT-WORKFLOW-STG-V1
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  memorySize: 512
+  stage: dev
+  timeout: 15
+  region: ap-southeast-3 # JKT
+  apiName: ${self:service}-API # Nama API
+  apiGateway:
+    binaryMediaTypes:
+      - "*/*"
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - "s3:*" # konfigurasi untuk semua aksi pada s3
+            # - "*"
+          Resource:
+            - "arn:aws:s3:::${self:custom.fileUploadBucketName}/*"
+        - Effect: "Allow"
+          Action:
+            - "s3:ListBucket"
+          Resource:
+            - "arn:aws:s3:::*"
+custom:
+  fileUploadBucketName: document-workflow-bucket-stg-v1
+
+functions:
+  app:
+    name: ${self:service}-FUNCTION
+    handler: app.api
+    events:
+      - http:
+          path: /
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/auth/login
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/users
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/groups
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/systems
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/combos
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/permission
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/permohonan
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/permohonan-status
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/systems/{proxy+}
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/users/{proxy+}
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/combos/{proxy+}
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/groups/{proxy+}
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/permission/{proxy+}
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/permohonan/{proxy+}
+          method: ANY
+          cors: true
+      - http:
+          path: /api/v1/permohonan-status/{proxy+}
+          method: ANY
+          cors: true
+resources:
+  Resources:
+    AttachmentsBucket: # create bucket baru
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.fileUploadBucketName}
+        AccessControl: Private
