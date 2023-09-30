@@ -50,7 +50,8 @@ class JoinController {
                 alamat_rumah_makan: makanan.alamat_rumah_makan,
                 alamat_makanan: makanan.alamat_makanan,
                 kecamatan_rm: makanan.kecamatan_rm,
-                kecamatan: makanan.kecamatan
+                kecamatan: makanan.kecamatan,
+                created_at: makanan.created_at
             });
           });
   
@@ -60,6 +61,54 @@ class JoinController {
         }
       );
     };
+
+    allMakananTerbaru = (req, res) => {
+      let messages = []
+      const makanans = []
+      if(!req.query.nama_makanan){
+        makanans.push({nama_makanan: 'a'})
+      } else{
+        makanans.push({nama_makanan: req.query.nama_makanan})
+      }
+      
+        this.#join.allMakananTerbaru(makanans,
+          (err, data) => {
+            if (err) {
+              if (err.kind === "NOT_FOUND") {
+                messages.push("Data makanan tidak ditemukan");
+                return NotFound(res, messages);
+              }
+    
+              messages.push("Internal error // Pagination error");
+              messages.push(err.message);
+              return InternalServerErr(res, messages);
+            }
+    
+            messages.push("Data makanan berhasil ditemukan");
+            const makanans = [];
+            data.data.forEach((makanan) => {
+                makanans.push({
+                  id_makanan: makanan.id_makanan,
+                  id_rumah_makan: makanan.id_rumah_makan,
+                  nama_makanan: makanan.nama_makanan,
+                  tipe_makanan: makanan.tipe_makanan,
+                  image1: makanan.image1,
+                  image2: makanan.image2,
+                  nama_rumah_makan: makanan.nama_rumah_makan,
+                  alamat_rumah_makan: makanan.alamat_rumah_makan,
+                  alamat_makanan: makanan.alamat_makanan,
+                  kecamatan_rm: makanan.kecamatan_rm,
+                  kecamatan: makanan.kecamatan,
+                  created_at: makanan.created_at
+              });
+            });
+    
+            data.data = makanans;
+            return Ok(res, messages, makanans);
+        
+          }
+        );
+      };
 
     allKudapanByKecamatan = (req, res) => {
       let messages = []

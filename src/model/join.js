@@ -14,14 +14,45 @@ class Join {
     const nama_makanan = `%${makanan[0].nama_makanan}%`
     const query = `select m.id as id_makanan, rm.id as id_rumah_makan, 
     m.nama_makanan, m.tipe_makanan, 
-    m.image1, m.image2, 
+    m.image1, m.image2, m.created_at,
     -- m.filosopi, m.memasak, m.bahan_baku, m.mencicipi, m.menghidangkan, m.pengalaman_unik, 
     -- m.etika_dan_etiket, 
     rm.nama_rumah_makan, rm.alamat as alamat_rumah_makan, m.alamat as alamat_makanan, rm.id_kecamatan as kecamatan_rm, 
     k.kecamatan 
     from makanan m left join rumah_makan rm on m.id_rumah_makan = rm .id 
     left join kecamatan k 
-    on rm.id_kecamatan  = k.id or m.id_kecamatan = k.id where lower(m.nama_makanan) like lower(?)`
+    on rm.id_kecamatan  = k.id or m.id_kecamatan = k.id where lower(m.nama_makanan) like lower(?) order by m.created_at desc`
+    this.#connection.query(query, [nama_makanan], (err, res) => {
+      if (err) {
+        return result(err, null);
+      }
+
+      // Jika data tidak ada
+      if (!res.length) {
+        return result({kind: 'NOT_FOUND'}, null);
+      }
+
+      const data = {
+        data: res
+      } 
+
+      return result(err, data);
+    });
+
+  };
+
+  allMakananTerbaru = (makanan, result) => {
+    const nama_makanan = `%${makanan[0].nama_makanan}%`
+    const query = `select m.id as id_makanan, rm.id as id_rumah_makan, 
+    m.nama_makanan, m.tipe_makanan, 
+    m.image1, m.image2, m.created_at,
+    -- m.filosopi, m.memasak, m.bahan_baku, m.mencicipi, m.menghidangkan, m.pengalaman_unik, 
+    -- m.etika_dan_etiket, 
+    rm.nama_rumah_makan, rm.alamat as alamat_rumah_makan, m.alamat as alamat_makanan, rm.id_kecamatan as kecamatan_rm, 
+    k.kecamatan 
+    from makanan m left join rumah_makan rm on m.id_rumah_makan = rm .id 
+    left join kecamatan k 
+    on rm.id_kecamatan  = k.id or m.id_kecamatan = k.id where lower(m.nama_makanan) like lower(?) order by m.created_at desc LIMIT 3`
     this.#connection.query(query, [nama_makanan], (err, res) => {
       if (err) {
         return result(err, null);
@@ -92,6 +123,7 @@ class Join {
     });
 
   };
+  
 
   allMenuByIdRumahMakan = (id_rumah_makan, result) => {
     const query = `	select m.id as id_makanan, rm.id as id_rumah_makan, m.nama_makanan, m.tipe_makanan, 

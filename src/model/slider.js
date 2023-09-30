@@ -12,7 +12,7 @@ class Slider {
 
 
   allSlider = (result) => {
-    const query = `select id, image, link from slider_beranda `
+    const query = `select id, image, link from slider_beranda order by created_at desc`
     this.#connection.query(query, (err, res) => {
       if (err) {
         return result(err, null);

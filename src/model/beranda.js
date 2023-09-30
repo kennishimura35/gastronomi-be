@@ -12,7 +12,7 @@ class Beranda {
 
 
   allBeranda = (result) => {
-    const query = `select id, image1, judul, sub_judul, content from beranda `
+    const query = `select id, image1, judul, sub_judul, content, logo from beranda `
     this.#connection.query(query, (err, res) => {
       if (err) {
         return result(err, null);
@@ -78,6 +78,41 @@ class Beranda {
         });
       } else{
         fs.unlinkSync(beranda.image1)
+        return result({kind: 'UNKNOWN_ID'}, null)
+      }
+
+    })
+  };
+
+  updateLogo = (beranda, result) => {
+    const query1 = `select logo from beranda where id = ?`
+    const query2 = `update beranda set logo = null where id = ? `
+    this.#connection.query(query1, [beranda.id], (err, res1) => {
+      if (err) {
+        return result(err, null);
+      } else if(res1[0] !== undefined) {
+
+        if(res1[0].logo !== null) {
+          try {
+            fs.unlinkSync(res1[0].logo)
+          } catch (error) {
+            fs.unlinkSync(beranda.logo)
+            this.#connection.query(query2, [beranda.id])
+            return result(error, null)
+          }
+          
+        }
+        const query = `update beranda set logo = ? where id = ? `
+        this.#connection.query(query, [beranda.logo, beranda.id], (err, res) => {
+        
+          if (err) {
+            return result(err, null);
+          }
+          
+          return result(null, beranda);
+        });
+      } else{
+        fs.unlinkSync(beranda.logo)
         return result({kind: 'UNKNOWN_ID'}, null)
       }
 

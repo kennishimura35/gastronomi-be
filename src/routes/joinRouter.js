@@ -13,6 +13,9 @@ const { BadRequest } = require("../helper/ResponseUtil");
 router.route('/allMakanan')
   .get(joinController.allMakanan)
 
+router.route('/allMakananTerbaru')
+  .get(joinController.allMakananTerbaru)
+
 router.route('/allKudapanByKecamatan')
   .get(joinController.allKudapanByKecamatan)
   

@@ -110,6 +110,7 @@ class BerandaController {
                 sub_judul: beranda.sub_judul,
                 content: beranda.content,
                 image1: beranda.image1,
+                logo: beranda.logo
             });
           });
   
@@ -179,7 +180,35 @@ class BerandaController {
         messages.push(`Beranda berhasil diubah`);
         return DataUpdated(res, messages);
       });
+    }
+
+    updateLogo = (req, res) => {
+      let messages = [];
+      // if (!req.query.id) {
+      //   messages.push("Field 'id' masih kosong");
+      // }
+      
+      if (!req?.file?.filename) {
+        messages.push("Field 'file' masih kosong");
+        return BadRequest(res, messages)
+      }
+
+      const beranda = {
+        id: '1', 
+        logo: `photos/${req.file.filename}`
+      }
+                    
+      this.#beranda.updateLogo(beranda, (err, data) => {
+        if (err) {
   
+          messages.push('Internal error // Update by id error');
+          messages.push(err.message);
+          return InternalServerErr(res, messages);
+      }
+  
+        messages.push(`Beranda berhasil diubah`);
+        return DataUpdated(res, messages);
+      });
     }
 
 }

@@ -1,8 +1,8 @@
 const express = require("express");
-const { BerandaController } = require('../controller/berandaController');
+const { KomentarController } = require('../controller/komentarController');
 const { JwtFilter } = require('../middleware/RequestFilter');
 
-const berandaController = new BerandaController();
+const komentarController = new KomentarController();
 
 const router = express.Router();
 
@@ -53,49 +53,26 @@ const singleUpload = multer({
 }).single("files");
 
 
-router.put("/edit", JwtFilter)
-
-router.put("/updateImage1ById", JwtFilter, function (req, res, next) {
-  singleUpload(req, res, function (err) {
-    if (err instanceof multer.MulterError) {
-      console.log(err)
-      BadRequest(res, "File anda tidak dalam ketentuan")
-    } else if (err) {
-      BadRequest(res, "File anda tidak dalam ketentuan")
-    } else {
-      next()
-    }
-    
-  })
-})
-
-router.put("/updateLogo", JwtFilter, function (req, res, next) {
-  singleUpload(req, res, function (err) {
-    if (err instanceof multer.MulterError) {
-      console.log(err)
-      BadRequest(res, "File anda tidak dalam ketentuan")
-    } else if (err) {
-      BadRequest(res, "File anda tidak dalam ketentuan")
-    } else {
-      next()
-    }
-    
-  })
-})
 
 
+router.delete("/deleteKomentarById", JwtFilter)
+router.get("allKomentar", JwtFilter)
 
-router.route('/allBeranda')
-  .get(berandaController.allBeranda)
 
-router.route('/edit')
-  .put(berandaController.updateBeranda)
+router.route('/allKomentar')
+  .get(komentarController.allKomentar)
 
-router.route('/updateImage1ById')
-  .put(berandaController.updateimage1ById)
+router.route('/komentarByIdMakanan')
+  .get(komentarController.komentarByIdMakanan)
 
-router.route('/updateLogo')
-  .put(berandaController.updateLogo)
+router.route('/averageKomentarByIdMakanan')
+  .get(komentarController.averageKomentarByIdMakanan)
+
+router.route('/createOneKomentar')
+  .post(komentarController.createOneKomentar)
+
+router.route('/deleteKomentarById')
+  .delete(komentarController.deleteKomentarById)
 
 
 module.exports = router;

@@ -12,7 +12,7 @@ class Kecamatan {
 
 
   allKecamatan = (result) => {
-    const query = `select id, kecamatan, image1, image2, content from kecamatan k `
+    const query = `select id, kecamatan, image1, image2, content from kecamatan k order by kecamatan asc`
     this.#connection.query(query, (err, res) => {
       if (err) {
         return result(err, null);

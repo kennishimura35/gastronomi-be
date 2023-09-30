@@ -1,8 +1,8 @@
 const express = require("express");
-const { BerandaController } = require('../controller/berandaController');
+const { BeritaController } = require('../controller/beritaController');
 const { JwtFilter } = require('../middleware/RequestFilter');
 
-const berandaController = new BerandaController();
+const beritaController = new BeritaController();
 
 const router = express.Router();
 
@@ -53,7 +53,19 @@ const singleUpload = multer({
 }).single("files");
 
 
-router.put("/edit", JwtFilter)
+router.post("/createOneBerita", JwtFilter, function (req, res, next) {
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      console.log(err)
+      BadRequest(res, "File anda tidak dalam ketentuan")
+    } else if (err) {
+      BadRequest(res, "File anda tidak dalam ketentuan")
+    } else {
+      next()
+    }
+    
+  })
+})
 
 router.put("/updateImage1ById", JwtFilter, function (req, res, next) {
   singleUpload(req, res, function (err) {
@@ -69,7 +81,7 @@ router.put("/updateImage1ById", JwtFilter, function (req, res, next) {
   })
 })
 
-router.put("/updateLogo", JwtFilter, function (req, res, next) {
+router.put("/updateImage2ById", JwtFilter, function (req, res, next) {
   singleUpload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       console.log(err)
@@ -83,19 +95,40 @@ router.put("/updateLogo", JwtFilter, function (req, res, next) {
   })
 })
 
+router.delete("/deleteImage1ById", JwtFilter)
+router.delete("/deleteImage2ById", JwtFilter)
+router.delete("/deleteBeritaById", JwtFilter)
+router.get("allBeritaAdmin", JwtFilter)
+router.get("beritaByIdAdmin", JwtFilter)
 
+router.put("/edit", JwtFilter)
 
-router.route('/allBeranda')
-  .get(berandaController.allBeranda)
+router.route('/allBerita')
+  .get(beritaController.allBerita)
+  
+router.route('/beritaTerbaru')
+  .get(beritaController.beritaTerbaru)
+
+router.route('/beritaById')
+  .get(beritaController.beritaById)
+
+router.route('/allBeritaAdmin')
+  .get(beritaController.allBeritaAdmin)
+
+router.route('/beritaByIdAdmin')
+  .get(beritaController.beritaByIdAdmin)
+
+router.route('/createOneBerita')
+  .post(beritaController.createOneBerita)
 
 router.route('/edit')
-  .put(berandaController.updateBeranda)
+  .put(beritaController.updateById)
 
 router.route('/updateImage1ById')
-  .put(berandaController.updateimage1ById)
+  .put(beritaController.updateimage1ById)
 
-router.route('/updateLogo')
-  .put(berandaController.updateLogo)
+router.route('/deleteBeritaById')
+  .delete(beritaController.deleteBeritaById)
 
 
 module.exports = router;
