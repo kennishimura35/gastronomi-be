@@ -18,7 +18,7 @@ class JoinController {
     let messages = []
     const makanans = []
     if(!req.query.nama_makanan){
-      makanans.push({nama_makanan: 'a'})
+      makanans.push({nama_makanan: ''})
     } else{
       makanans.push({nama_makanan: req.query.nama_makanan})
     }
