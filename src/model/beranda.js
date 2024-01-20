@@ -12,7 +12,7 @@ class Beranda {
 
 
   allBeranda = (result) => {
-    const query = `select id, image1, judul, sub_judul, content, logo from beranda `
+    const query = `select id, image1, judul, sub_judul, content, instagram, email, logo from beranda `
     this.#connection.query(query, (err, res) => {
       if (err) {
         return result(err, null);
@@ -33,8 +33,8 @@ class Beranda {
   };
 
   updateBeranda = (beranda, result) => {
-    const query = `update beranda set judul = ?, sub_judul = ?, content = ? where id = ? `
-    this.#connection.query(query, [beranda.judul, beranda.sub_judul, beranda.content, beranda.id], (err, res) => {
+    const query = `update beranda set judul = ?, sub_judul = ?, content = ?, instagram = ?, email = ? where id = ? `
+    this.#connection.query(query, [beranda.judul, beranda.sub_judul, beranda.content, beranda.instagram, beranda.email, beranda.id], (err, res) => {
      
       if (err) {
         return result(err, null);

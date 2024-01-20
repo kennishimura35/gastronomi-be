@@ -109,6 +109,8 @@ class BerandaController {
                 judul: beranda.judul,
                 sub_judul: beranda.sub_judul,
                 content: beranda.content,
+                instagram: beranda.instagram,
+                email: beranda.email,
                 image1: beranda.image1,
                 logo: beranda.logo
             });
@@ -131,7 +133,9 @@ class BerandaController {
         id: '1', 
         judul: req.body.judul,
         sub_judul: req.body.sub_judul, 
-        content: req.body.content
+        content: req.body.content,
+        instagram: req.body.instagram,
+        email: req.body.email
       }
                             
       this.#beranda.updateBeranda(beranda, (err, data) => {
