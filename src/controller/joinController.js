@@ -155,6 +155,87 @@ class JoinController {
         );
       };
 
+    allKudapanByKecamatan = (req, res) => {
+      let messages = []
+      
+      if(!req.query.kecamatan){
+        messages.push("Mohon masukkan nama kecamatan!!")
+        return BadRequest(res, messages)
+      }
+
+      const kecamatan = req.query.kecamatan
+
+        this.#join.allKudapanByKecamatan(
+          kecamatan, 
+          (err, data) => {
+            if (err) {
+              if (err.kind === "NOT_FOUND") {
+                messages.push("Data makanan tidak ditemukan");
+                return NotFound(res, messages);
+              }
+    
+              messages.push("Internal error // Pagination error");
+              messages.push(err.message);
+              return InternalServerErr(res, messages);
+            }
+    
+            messages.push("Data makanan berhasil ditemukan");
+            const makanans = [];
+            data.data.forEach((makanan) => {
+                makanans.push({
+                  id: makanan.id,
+                  nama_makanan: makanan.nama_makanan,
+                  tipe_makanan: makanan.tipe_makanan,
+                  image1: makanan.image1,
+                  image2: makanan.image2,
+                  filosopi: makanan.filosopi,
+                  kecamatan: makanan.kecamatan
+              });
+            });
+    
+            data.data = makanans;
+            return Ok(res, messages, makanans);
+        
+          }
+        );
+      };
+
+      allKudapan = (req, res) => {
+        let messages = []
+          this.#join.allKudapan(
+            (err, data) => {
+              if (err) {
+                if (err.kind === "NOT_FOUND") {
+                  messages.push("Data makanan tidak ditemukan");
+                  return NotFound(res, messages);
+                }
+      
+                messages.push("Internal error // Pagination error");
+                messages.push(err.message);
+                return InternalServerErr(res, messages);
+              }
+      
+              messages.push("Data makanan berhasil ditemukan");
+              const makanans = [];
+              data.data.forEach((makanan) => {
+                  makanans.push({
+                    id: makanan.id,
+                    nama_makanan: makanan.nama_makanan,
+                    tipe_makanan: makanan.tipe_makanan,
+                    image1: makanan.image1,
+                    image2: makanan.image2,
+                    filosopi: makanan.filosopi,
+                    kecamatan: makanan.kecamatan
+                });
+              });
+      
+              data.data = makanans;
+              return Ok(res, messages, makanans);
+          
+            }
+          );
+        };
+
     allRumahMakanByKecamatan = (req, res) => {
       let messages = []
       

@@ -99,6 +99,30 @@ class Join {
 
   };
 
+  allKudapan = (result) => {
+    const query = `select m.id, m.nama_makanan, m.tipe_makanan, m.image1, m.image2, m.filosopi, m.memasak, m.bahan_baku, m.mencicipi,
+    m.menghidangkan, m.pengalaman_unik, m.etika_dan_etiket, m.alamat, m.id_kecamatan
+    from makanan m 
+    where tipe_makanan = 'kudapan' and id_rumah_makan is null `
+    this.#connection.query(query, (err, res) => {
+      if (err) {
+        return result(err, null);
+      }
+
+      // Jika data tidak ada
+      if (!res.length) {
+        return result({kind: 'NOT_FOUND'}, null);
+      }
+
+      const data = {
+        data: res
+      } 
+
+      return result(err, data);
+    });
+
+  };
+
   allRumahMakanByKecamatan = (kecamatan, result) => {
     const query = `	select rm.id as id_rumah_makan, rm.nama_rumah_makan, rm.id_kecamatan, rm.image1, rm.image2, 
     rm.content, rm.alamat, k.kecamatan 

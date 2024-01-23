@@ -18,7 +18,10 @@ router.route('/allMakananTerbaru')
 
 router.route('/allKudapanByKecamatan')
   .get(joinController.allKudapanByKecamatan)
-  
+
+router.route('/allKudapan')
+  .get(joinController.allKudapan)
+
 router.route('/allRumahMakanByKecamatan')
 .get(joinController.allRumahMakanByKecamatan)
 

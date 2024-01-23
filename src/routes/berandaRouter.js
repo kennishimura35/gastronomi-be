@@ -69,6 +69,21 @@ router.put("/updateImage1ById", JwtFilter, function (req, res, next) {
   })
 })
 
+
+router.put("/updateImage2ById", JwtFilter, function (req, res, next) {
+  singleUpload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      console.log(err)
+      BadRequest(res, "File anda tidak dalam ketentuan")
+    } else if (err) {
+      BadRequest(res, "File anda tidak dalam ketentuan")
+    } else {
+      next()
+    }
+    
+  })
+})
+
 router.put("/updateLogo", JwtFilter, function (req, res, next) {
   singleUpload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
@@ -93,6 +108,9 @@ router.route('/edit')
 
 router.route('/updateImage1ById')
   .put(berandaController.updateimage1ById)
+
+router.route('/updateImage2ById')
+  .put(berandaController.updateimage2ById)
 
 router.route('/updateLogo')
   .put(berandaController.updateLogo)

@@ -112,7 +112,15 @@ class BerandaController {
                 instagram: beranda.instagram,
                 email: beranda.email,
                 image1: beranda.image1,
-                logo: beranda.logo
+                logo: beranda.logo,
+                rightContent: beranda.rightContent,
+                rumahMakan: beranda.rumahMakan,
+                umkm: beranda.umkm,
+                resort: beranda.resort,
+                hotel: beranda.hotel,
+                kabupatenkota: beranda.kabupatenkota,
+                leftAbout: beranda.leftAbout,
+                image2: beranda.image2
             });
           });
   
@@ -135,7 +143,14 @@ class BerandaController {
         sub_judul: req.body.sub_judul, 
         content: req.body.content,
         instagram: req.body.instagram,
-        email: req.body.email
+        email: req.body.email,
+        rightContent: req.body.rightContent,
+        rumahMakan: req.body.rumahMakan,
+        umkm: req.body.umkm,
+        resort: req.body.resort,
+        hotel: req.body.hotel,
+        kabupatenkota: req.body.kabupatenkota,
+        leftAbout: req.body.leftAbout
       }
                             
       this.#beranda.updateBeranda(beranda, (err, data) => {
@@ -174,6 +189,36 @@ class BerandaController {
       }
                     
       this.#beranda.updateimage1ById(beranda, (err, data) => {
+        if (err) {
+  
+          messages.push('Internal error // Update by id error');
+          messages.push(err.message);
+          return InternalServerErr(res, messages);
+      }
+  
+        messages.push(`Beranda berhasil diubah`);
+        return DataUpdated(res, messages);
+      });
+    }
+
+
+    updateimage2ById = (req, res) => {
+      let messages = [];
+      // if (!req.query.id) {
+      //   messages.push("Field 'id' masih kosong");
+      // }
+      
+      if (!req?.file?.filename) {
+        messages.push("Field 'file' masih kosong");
+        return BadRequest(res, messages)
+      }
+
+      const beranda = {
+        id: '1', 
+        image2: `photos/${req.file.filename}`
+      }
+                    
+      this.#beranda.updateimage2ById(beranda, (err, data) => {
         if (err) {
   
           messages.push('Internal error // Update by id error');

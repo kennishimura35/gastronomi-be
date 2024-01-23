@@ -12,7 +12,8 @@ class Beranda {
 
 
   allBeranda = (result) => {
-    const query = `select id, image1, judul, sub_judul, content, instagram, email, logo from beranda `
+    const query = `select id, image1, judul, sub_judul, content, instagram, email, logo, rightContent,
+    rumahMakan, umkm, resort, hotel, kabupatenkota, leftAbout, image2 from beranda `
     this.#connection.query(query, (err, res) => {
       if (err) {
         return result(err, null);
@@ -33,8 +34,12 @@ class Beranda {
   };
 
   updateBeranda = (beranda, result) => {
-    const query = `update beranda set judul = ?, sub_judul = ?, content = ?, instagram = ?, email = ? where id = ? `
-    this.#connection.query(query, [beranda.judul, beranda.sub_judul, beranda.content, beranda.instagram, beranda.email, beranda.id], (err, res) => {
+    const query = `update beranda set judul = ?, sub_judul = ?, content = ?, instagram = ?, email = ?, rightContent = ?,
+    rumahMakan = ?, umkm = ?, resort = ?, hotel = ?, kabupatenkota = ?, leftAbout = ? where id = ? `
+    this.#connection.query(query, [beranda.judul, beranda.sub_judul, beranda.content, beranda.instagram, 
+      beranda.email, beranda.rightContent, 
+      beranda.rumahMakan, beranda.umkm, beranda.resort, beranda.hotel, beranda.kabupatenkota, beranda.leftAbout,
+      beranda.id], (err, res) => {
      
       if (err) {
         return result(err, null);
@@ -78,6 +83,42 @@ class Beranda {
         });
       } else{
         fs.unlinkSync(beranda.image1)
+        return result({kind: 'UNKNOWN_ID'}, null)
+      }
+
+    })
+  };
+
+
+  updateimage2ById = (beranda, result) => {
+    const query1 = `select image2 from beranda where id = ?`
+    const query2 = `update beranda set image2 = null where id = ? `
+    this.#connection.query(query1, [beranda.id], (err, res1) => {
+      if (err) {
+        return result(err, null);
+      } else if(res1[0] !== undefined) {
+
+        if(res1[0].image2 !== null && res1[0].image2 !== '') {
+          try {
+            fs.unlinkSync(res1[0].image2)
+          } catch (error) {
+            fs.unlinkSync(beranda.image2)
+            this.#connection.query(query2, [beranda.id])
+            return result(error, null)
+          }
+          
+        }
+        const query = `update beranda set image2 = ? where id = ? `
+        this.#connection.query(query, [beranda.image2, beranda.id], (err, res) => {
+        
+          if (err) {
+            return result(err, null);
+          }
+          
+          return result(null, beranda);
+        });
+      } else{
+        fs.unlinkSync(beranda.image2)
         return result({kind: 'UNKNOWN_ID'}, null)
       }
 
